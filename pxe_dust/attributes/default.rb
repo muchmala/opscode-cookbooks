@@ -1,9 +1,9 @@
 #
-# Author:: Seth Chisamore <schisamo@opscode.com>
-# Cookbook Name:: python
-# Recipe:: default
+# Author:: Matt Ray <matt@opscode.com>
+# Cookbook Name:: pxe_dust
+# Attributes:: default
 #
-# Copyright 2011, Opscode, Inc.
+# Copyright 2011 Opscode, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@
 # limitations under the License.
 #
 
-include_recipe "python::#{node['python']['install_method']}"
-include_recipe "python::pip"
-include_recipe "python::virtualenv"
+default[:pxe_dust][:arch] = "amd64"
+default[:pxe_dust][:tftpboot] = "/var/lib/tftpboot"
+default[:pxe_dust][:version] = "maverick"
+default[:pxe_dust][:user][:fullname] = "Ubuntu"
+default[:pxe_dust][:user][:username] = "ubuntu"
+default[:pxe_dust][:user][:crypted_password] = nil

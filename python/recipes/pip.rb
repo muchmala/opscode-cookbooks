@@ -1,6 +1,7 @@
 #
-# Cookbook Name:: gnu_parallel
-# Recipe:: source
+# Author:: Seth Chisamore <schisamo@opscode.com>
+# Cookbook Name:: python
+# Recipe:: pip
 #
 # Copyright 2011, Opscode, Inc.
 #
@@ -17,21 +18,21 @@
 # limitations under the License.
 #
 
-include_recipe "build-essential"
-
-version = node['gnu_parallel']['version']
-
-remote_file "#{Chef::Config[:file_cache_path]}/parallel-#{version}.tar.bz2" do
-  source "#{node['gnu_parallel']['url']}/parallel-#{version}.tar.bz2"
-  checksum node['gnu_parallel']['checksum']
-  mode 0644
+# Ubuntu's python-setuptools, python-pip and python-virtualenv packages 
+# are broken...this feels like Rubygems!
+# http://stackoverflow.com/questions/4324558/whats-the-proper-way-to-install-pip-virtualenv-and-distribute-for-python
+# https://bitbucket.org/ianb/pip/issue/104/pip-uninstall-on-ubuntu-linux
+remote_file "#{Chef::Config[:file_cache_path]}/distribute_setup.py" do
+  source "http://python-distribute.org/distribute_setup.py"
+  mode "0644"
+  not_if "which pip"
 end
 
-bash "build gnu parallel" do
+bash "install-pip" do
   cwd Chef::Config[:file_cache_path]
   code <<-EOF
-  tar -jxvf parallel-#{version}.tar.bz2
-  (cd parallel-#{version} && ./configure #{node['gnu_parallel']['configure_options'].join(" ")})
-  (cd parallel-#{version} && make && make install)
+  python distribute_setup.py
+  easy_install pip
   EOF
+  not_if "which pip"
 end
