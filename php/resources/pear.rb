@@ -1,9 +1,9 @@
 #
-# Author::  Joshua Timberman (<joshua@opscode.com>)
+# Author:: Seth Chisamore <schisamo@opscode.com>
 # Cookbook Name:: php
-# Recipe:: default
+# Resource:: pear_package
 #
-# Copyright 2009, Opscode, Inc.
+# Copyright:: 2011, Opscode, Inc <legal@opscode.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,15 +18,11 @@
 # limitations under the License.
 #
 
-packages = value_for_platform(
-  ["centos", "redhat", "fedora", "suse"] => {
-    "default" => []
-  },
-  "default" => %w{ php4 php4-mysql php4-ldap php4-gd }
-)
+actions :install, :upgrade, :remove, :purge
 
-pacakges.each do |pkg|
-  package pkg do
-    action :upgrade
-  end
-end
+attribute :package_name, :kind_of => String, :name_attribute => true
+attribute :version, :default => nil
+attribute :channel, :kind_of => String
+attribute :options, :kind_of => String
+attribute :directives, :kind_of => Hash, :default => {}
+attribute :preferred_state, :default => 'stable'
