@@ -116,7 +116,7 @@ if app["database_master_role"]
   
   # we need the django version to render the correct type of settings.py file
   django_version = 1.2
-  if app['pips'].has_key?('django') && !app['pips']['django'].blank?
+  if app['pips'].has_key?('django') && !app['pips']['django'].strip.empty?
     django_version = app['pips']['django'].to_f
   end
 
@@ -148,6 +148,7 @@ deploy_revision app['id'] do
   deploy_to app['deploy_to']
   action app['force'][node.app_environment] ? :force_deploy : :deploy
   ssh_wrapper "#{app['deploy_to']}/deploy-ssh-wrapper" if app['deploy_key']
+  shallow_clone true
   purge_before_symlink([])
   create_dirs_before_symlink([])
   symlinks({})
